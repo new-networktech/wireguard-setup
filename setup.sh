@@ -1,10 +1,14 @@
 #!/bin/bash
 
-# This script automates the WireGuard installation process
+# This script automates the WireGuard VPN setup process
 
-# Step 1: Update and install Ansible
-echo "Updating system and installing Ansible..."
-sudo apt update && sudo apt install -y ansible
+# Step 1: Check for and install prerequisites
+if ! [ -x "$(command -v ansible)" ]; then
+  echo "Ansible not found! Running the prerequisites installation script..."
+  bash install-prerequisites.sh
+else
+  echo "Ansible is already installed."
+fi
 
 # Step 2: Run the Ansible playbook
 echo "Running the Ansible playbook to configure WireGuard..."

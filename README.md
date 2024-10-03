@@ -9,6 +9,12 @@ Before proceeding, ensure you have the following:
 - **SSH access** to your cloud server.
 - Basic knowledge of how to edit text files (to update the server IP).
 
+The setup script will automatically install all necessary tools like **git**, **ansible**, and any other dependencies using the `install-prerequisites.sh` script. You can first create a file name install-prerequisites.sh cpoy and past the content's from source file in Github to your Local machine, then this command will install all rerequisites: 
+
+```bash
+./install-prerequisites.sh
+```
+
 ## Steps to Set Up WireGuard VPN
 
 ### 1. Clone This Repository
