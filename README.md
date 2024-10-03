@@ -16,19 +16,19 @@ Before proceeding, ensure you have the following:
 First, clone this GitHub repository to your local machine:
 
 ```bash
-      git clone https://github.com/yourusername/wireguard-setup.git
-      cd wireguard-setup
+git clone https://github.com/yourusername/wireguard-setup.git
+cd wireguard-setup
 ```
 ### 2. Update the Server IP
 Open the inventory.ini file in the repository and replace <SERVER_IP> with your actual cloud server's IP address. You should also update the ansible_user with your SSH user (default is usually root for many cloud providers, but it can vary).
 ```
-     [vpn]
-     vpn_server ansible_host=<SERVER_IP> ansible_user=<SERVER_USER>
+[vpn]
+vpn_server ansible_host=<SERVER_IP> ansible_user=<SERVER_USER>
 ```
 > Example of what the updated **inventory.ini** might look like:
 ```
-     [vpn]
-     vpn_server ansible_host=1.2.3.4 ansible_user=root
+[vpn]
+vpn_server ansible_host=1.2.3.4 ansible_user=root
 ```
 
 ### 3. Run the Setup Script
@@ -40,11 +40,11 @@ After updating your server's IP in the inventory.ini file, you can now run the p
 
 **To run the script, simply execute:**
 ```
-     bash setup.sh
+bash setup.sh
 ```
 ### 4. Copy the Client Configuration to Your Local Machine
 ```
-     scp root@<SERVER_IP>:/root/client-wg.conf .
+scp root@<SERVER_IP>:/root/client-wg.conf .
 ```
 Replace <SERVER_IP> with the IP of your server.
 ### 5. Connect to Your WireGuard VPN
@@ -52,15 +52,15 @@ Now that you have the client-wg.conf file on your local machine, you can use it 
 #### On Linux:
 1. Install WireGuard:
 ```
-       sudo apt install wireguard -y
+sudo apt install wireguard -y
 ```
 2. Move the **client-wg.conf** file to **/etc/wireguard/**:
 ```
-       sudo mv client-wg.conf /etc/wireguard/
+sudo mv client-wg.conf /etc/wireguard/
 ```
 3. Start the VPN:
 ```
-       sudo wg-quick up client-wg.conf
+sudo wg-quick up client-wg.conf
 ```
 #### macOS:
 1. Install the WireGuard app from the official website: WireGuard for macOS.
