@@ -134,11 +134,12 @@ scp root@<YOUR_SERVER_IP>:/root/client-wg.conf ~/Downloads/
 the VPN.
    + Once connected, go to https://whatismyipaddress.com/ in your browser and check if your IP address has changed.
 
+*If you are going to uninstall all steps you can use this command :*
 
-
-
-
-
+```
+bash uninstall-wireguard.sh
+```
+---------
 
 ### Troubleshooting
 
@@ -148,7 +149,6 @@ the VPN.
    * The client configuration file (`client-wg.conf`) is correct.
    * For any issues with downloading files from the server to Windows, verify that you can SSH into the server and that WinSCP is correctly configured.
    * *For any issues with downloading files from the server to your device, verify that your method of transferring files is properly configured (e.g., SCP, cloud services)*
-
 ----------------------
 
 ### How It Works
