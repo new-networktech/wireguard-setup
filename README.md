@@ -12,6 +12,13 @@ Before proceeding, ensure you have the following:
 
 The setup script will automatically install all necessary tools like **git**, **ansible**, and any other dependencies using the `install-prerequisites.sh` script. You can first create a file name install-prerequisites.sh cpoy and past the content's from source file in Github to your Local machine, then this command will install all prerequisites: 
 
+*You can easy use nano command to create the install-prerequisites.sh file.*
+
+Make the  install-prerequisites.sh script **executable** (if not already):
+```bash
+chmod +x install-prerequisites.sh 
+```
+
 ```bash
 bash install-prerequisites.sh
 ```
@@ -23,7 +30,7 @@ bash install-prerequisites.sh
 First, clone this GitHub repository to your local machine:
 
 ```bash
-git clone https://github.com/yourusername/wireguard-setup.git
+git clone https://github.com/new-networktech/wireguard-setup.git
 cd wireguard-setup
 ```
 
@@ -33,7 +40,10 @@ Now you can now run the provided setup script. This script will:
 + Install Ansible on your local machine if it is not already installed.
 + Run the Ansible playbook that installs WireGuard on your cloud server.
 + Generate the WireGuard configuration files for both the server and the client.
-
+*Make the  install-prerequisites.sh script **executable** (if not already):*
+```bash
+chmod +x setup.sh 
+```
 **To run the script, simply execute:**
 ```
 bash setup.sh
