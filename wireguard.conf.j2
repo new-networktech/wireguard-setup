@@ -5,5 +5,5 @@ PrivateKey = {{ server_private_key.stdout }}
 SaveConfig = true
 
 [Peer]
-PublicKey = {{ client_public_key }}
+PublicKey = {{ client_public_key.stdout }}
 AllowedIPs = 10.0.0.2/32

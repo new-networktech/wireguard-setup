@@ -1,22 +1,50 @@
 ---
-- hosts: vpn
+- hosts: localhost
   become: yes
   tasks:
-
     - name: Install WireGuard
       apt:
         name: wireguard
         state: present
         update_cache: yes
 
+    # Generate the server private key
     - name: Generate server private key
-      command: wg genkey
+      shell: wg genkey
       register: server_private_key
 
+    # Log the server private key (for debugging)
+    - debug:
+        msg: "Server Private Key: {{ server_private_key.stdout }}"
+
+    # Generate the server public key from the private key
     - name: Generate server public key
-      command: echo "{{ server_private_key.stdout }}" | wg pubkey
+      shell: echo "{{ server_private_key.stdout }}" | wg pubkey
       register: server_public_key
 
+    # Log the server public key (for debugging)
+    - debug:
+        msg: "Server Public Key: {{ server_public_key.stdout }}"
+
+    # Generate the client private key
+    - name: Generate client private key
+      shell: wg genkey
+      register: client_private_key
+
+    # Log the client private key (for debugging)
+    - debug:
+        msg: "Client Private Key: {{ client_private_key.stdout }}"
+
+    # Generate the client public key from the private key
+    - name: Generate client public key
+      shell: echo "{{ client_private_key.stdout }}" | wg pubkey
+      register: client_public_key
+
+    # Log the client public key (for debugging)
+    - debug:
+        msg: "Client Public Key: {{ client_public_key.stdout }}"
+
+    # Create the WireGuard server configuration using both server and client public keys
     - name: Create WireGuard server configuration
       template:
         src: wireguard.conf.j2
@@ -25,13 +53,57 @@
         group: root
         mode: 0600
 
+    # Enable and start WireGuard
     - name: Enable and start WireGuard
       systemd:
         name: wg-quick@wg0
         enabled: yes
         state: started
 
+    # Create the client configuration file
     - name: Create client configuration
       template:
         src: client.conf.j2
         dest: ~/client-wg.conf
+
+    # Enable IP forwarding (for routing)
+    - name: Enable IP forwarding
+      sysctl:
+        name: net.ipv4.ip_forward
+        value: '1'
+        state: present
+        reload: yes
+
+    # Set up iptables NAT (MASQUERADE) for WireGuard traffic
+    - name: Set up NAT (iptables) for VPN traffic
+      command: iptables -t nat -A POSTROUTING -o eth0 -j MASQUERADE
+      args:
+        warn: false
+
+    # Make iptables persistent across reboots
+    - name: Install iptables-persistent to save rules across reboots
+      apt:
+        name: iptables-persistent
+        state: present
+
+    # Reload and save iptables rules to persist after reboot
+    - name: Save iptables rules
+      command: netfilter-persistent save
+
+    # UFW firewall rules (optional, if UFW is used)
+    - name: Allow WireGuard UDP traffic through UFW
+      ufw:
+        rule: allow
+        port: '51820'
+        proto: udp
+
+    - name: Allow IP forwarding in UFW (optional)
+      lineinfile:
+        path: /etc/default/ufw
+        regexp: '^DEFAULT_FORWARD_POLICY='
+        line: 'DEFAULT_FORWARD_POLICY="ACCEPT"'
+        state: present
+
+    - name: Reload UFW to apply changes
+      command: ufw reload
+      when: ansible_facts['os_family'] == "Debian" # Run this only if UFW is available
